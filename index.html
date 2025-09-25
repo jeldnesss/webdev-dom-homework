@@ -5,7 +5,6 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-
   <body>
     <div class="container">
       <ul class="comments">
@@ -31,10 +30,7 @@
 
   <script>
     "use strict";
-    const comments = {
-      commentatorName: [],
-      commentText: []
-    };
+
     const commentContainer = document.querySelector('.comments');
     document.querySelector('.add-form-button').addEventListener('click', () => {
       const commName = document.querySelector('.add-form-name').value;
@@ -47,8 +43,7 @@
         alert('Введите ваше имя');
         return;
       }
-      comments.commentText.push(commText);
-      comments.commentatorName.push(commName);
+
       function formatDate(dateInput) {
         const date = new Date(dateInput);
 
@@ -64,10 +59,8 @@
       document.querySelector('.add-form-name').value = '';
       document.querySelector('.add-form-text').value = '';
 
-      const commentCard = document.createElement('li');
-      commentCard.classList.add('comment');
-
-      commentCard.innerHTML = `
+      commentContainer.innerHTML = `
+      <li class="comment">
         <div class="comment-header">
             <div id="name">${commName}</div>
             <div>${formatDate(new Date())}</div>
@@ -83,10 +76,8 @@
               <button class="like-button"></button>
             </div>
           </div>
+        </li>
       `;
-      commentContainer.appendChild(commentCard);
     });
-    console.log(comments);
-
   </script>
 </html>
