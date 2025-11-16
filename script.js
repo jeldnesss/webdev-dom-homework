@@ -46,8 +46,8 @@
     }
 
     document.querySelector('.add-form-button').addEventListener('click', () => {
-      const commName = document.querySelector('.add-form-name').value;
-      const commText = document.querySelector('.add-form-text').value;
+      const commName = document.querySelector('.add-form-name').value.replaceAll("<", "&lt").replaceAll(">", "&gt");
+      const commText = document.querySelector('.add-form-text').value.replaceAll("<", "&lt").replaceAll(">", "&gt");
       if (commText.length === 0){
         alert('Напишите отзыв');
         return;
@@ -70,6 +70,7 @@
     });
 
     commentContainer.addEventListener("click", (event) => {
+      const eventEl = event.target.closest(".comment");
         if(event.target.classList.contains("like")){
             const index = event.target.dataset.index;
             const comment = comments[index];
@@ -80,7 +81,19 @@
                 comment.isLiked = true;
                 comment.likesCount++;
             }
+            renderComments();
+            return;
         }
-        renderComments();
+        
+
+        if(eventEl){
+          const prName = eventEl.querySelector("#name").textContent.trim();
+          const prText = eventEl.querySelector("#commentText").textContent.trim();
+
+          document.querySelector(".add-form-text").value = prName + ", " + prText + ".";
+
+          return;
+        }
+
     });
 
