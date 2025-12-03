@@ -1,1 +1,5 @@
-export const comments = []
+export let comments = []
+
+export function fillComments(newComm) {
+    comments = newComm
+}

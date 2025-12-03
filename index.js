@@ -1,7 +1,5 @@
-import { renderComments } from './modules/renderComments.js'
-import { commentListeners } from './modules/listeners.js'
 import { addCommentListener } from './modules/listeners.js'
+import { loadComments } from './modules/loadComments.js'
 
-renderComments()
-commentListeners()
+loadComments()
 addCommentListener()

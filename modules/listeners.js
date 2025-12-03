@@ -1,32 +1,33 @@
 import { formatText } from './replaceAll.js'
 import { comments } from './comments.js'
-import { formatDate } from './date.js'
+
 import { renderComments } from './renderComments.js'
+import { loadComments } from './loadComments.js'
 
 export function addCommentListener() {
     document.querySelector('.add-form-button').addEventListener('click', () => {
         const commName = formatText(document.querySelector('.add-form-name'))
         const commText = formatText(document.querySelector('.add-form-text'))
-        if (commText.length === 0) {
-            alert('Напишите отзыв')
+        if (commText.length < 3) {
+            alert('Текст должен содержать хотя бы 3 символа')
             return
         }
-        if (commName.length === 0) {
-            alert('Введите ваше имя')
+        if (commName.length < 3) {
+            alert('Имя должно содержать хотя бы 3 символа')
             return
         }
-        comments.push({
-            name: commName,
-            text: commText,
-            date: formatDate(new Date()),
-            isLiked: false,
-            likesCount: 0,
+        fetch('https://wedev-api.sky.pro/api/v1/jeldnesss/comments', {
+            method: 'POST',
+            body: JSON.stringify({
+                text: commText,
+                name: commName,
+            }),
         })
-        document.querySelector('.add-form-name').value = ''
-        document.querySelector('.add-form-text').value = ''
-
-        renderComments()
-        commentListeners()
+            .then((response) => {
+                return response.json()
+            })
+            .then(() => loadComments())
+            .catch((err) => alert(err))
     })
 }
 
