@@ -16,6 +16,10 @@ export function addCommentListener() {
             alert('Имя должно содержать хотя бы 3 символа')
             return
         }
+        const commContainer = document.querySelector('.comments')
+        const loadText = document.createElement('li')
+        loadText.textContent = 'Комментарий загружается'
+        commContainer.appendChild(loadText)
         fetch('https://wedev-api.sky.pro/api/v1/jeldnesss/comments', {
             method: 'POST',
             body: JSON.stringify({
@@ -27,6 +31,11 @@ export function addCommentListener() {
                 return response.json()
             })
             .then(() => loadComments())
+            .then(
+                () => loadText.remove(),
+                (document.querySelector('.add-form-text').value = ''),
+                (document.querySelector('.add-form-name').value = ''),
+            )
             .catch((err) => alert(err))
     })
 }

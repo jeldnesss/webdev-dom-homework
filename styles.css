@@ -95,6 +95,18 @@ body {
     background-size: contain;
     background-color: transparent;
   }
+  .loader{
+    width: 30px;
+    height: 30px;
+    border: 2px solid #ccc;
+    border-top-color: #bcec30;
+    border-radius: 100%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin{
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+  }
 
   .add-form {
     padding: 20px;
