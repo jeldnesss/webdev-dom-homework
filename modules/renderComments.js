@@ -1,4 +1,5 @@
 import { comments } from './comments.js'
+import { formatDate } from './date.js'
 
 const commentContainer = document.querySelector('.comments')
 
@@ -9,7 +10,7 @@ function renderComments() {
                 <li class="comment">
                 <div class="comment-header">
                     <div id="name">${comment.name}</div>
-                    <div>${comment.date}</div>
+                    <div>${formatDate(comment.date)}</div>
                 </div>
                 <div class="comment-body">
                     <div id="commentText" class="comment-text">
