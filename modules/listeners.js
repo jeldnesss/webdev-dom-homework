@@ -8,14 +8,6 @@ export function addCommentListener() {
     document.querySelector('.add-form-button').addEventListener('click', () => {
         const commName = formatText(document.querySelector('.add-form-name'))
         const commText = formatText(document.querySelector('.add-form-text'))
-        if (commText.length < 3) {
-            alert('Текст должен содержать хотя бы 3 символа')
-            return
-        }
-        if (commName.length < 3) {
-            alert('Имя должно содержать хотя бы 3 символа')
-            return
-        }
         const commContainer = document.querySelector('.comments')
         const loadText = document.createElement('li')
         loadText.textContent = 'Комментарий загружается'
@@ -28,15 +20,29 @@ export function addCommentListener() {
             }),
         })
             .then((response) => {
-                return response.json()
+                if (response.status === 201) {
+                    return response.json()
+                }
+                if (response.status === 400) {
+                    return response.json().then((data) => {
+                        throw new Error(data.error)
+                    })
+                }
+                if (response.status === 500) {
+                    throw new Error('Сервер упал')
+                }
+                throw new Error('Что-то пошло не так')
             })
             .then(() => loadComments())
-            .then(
-                () => loadText.remove(),
-                (document.querySelector('.add-form-text').value = ''),
-                (document.querySelector('.add-form-name').value = ''),
-            )
-            .catch((err) => alert(err))
+            .then(() => {
+                loadText.remove()
+                document.querySelector('.add-form-text').value = ''
+                document.querySelector('.add-form-name').value = ''
+            })
+            .catch((error) => {
+                loadText.remove()
+                alert(error.message)
+            })
     })
 }
 
