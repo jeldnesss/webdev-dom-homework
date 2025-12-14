@@ -4,40 +4,43 @@ import { comments } from './comments.js'
 import { renderComments } from './renderComments.js'
 import { loadComments } from './loadComments.js'
 
-export function addCommentListener() {
+export function addCommentListener(token) {
     document.querySelector('.add-form-button').addEventListener('click', () => {
-        const commName = formatText(document.querySelector('.add-form-name'))
         const commText = formatText(document.querySelector('.add-form-text'))
+
+        if (commText.length < 3) {
+            alert('Текст должен содержать хотя бы 3 символа')
+            return
+        }
+
         const commContainer = document.querySelector('.comments')
         const loadText = document.createElement('li')
         loadText.textContent = 'Комментарий загружается'
         commContainer.appendChild(loadText)
-        fetch('https://wedev-api.sky.pro/api/v1/jeldnesss/comments', {
+
+        fetch('https://wedev-api.sky.pro/api/v2/jeldnesss/comments', {
             method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({
                 text: commText,
-                name: commName,
             }),
         })
             .then((response) => {
-                if (response.status === 201) {
-                    return response.json()
-                }
-                if (response.status === 400) {
+                if (response.status === 201) return response.json()
+                if (response.status === 400)
                     return response.json().then((data) => {
                         throw new Error(data.error)
                     })
-                }
-                if (response.status === 500) {
-                    throw new Error('Сервер упал')
-                }
+                if (response.status === 500) throw new Error('Сервер упал')
                 throw new Error('Что-то пошло не так')
             })
             .then(() => loadComments())
             .then(() => {
                 loadText.remove()
+
                 document.querySelector('.add-form-text').value = ''
-                document.querySelector('.add-form-name').value = ''
             })
             .catch((error) => {
                 loadText.remove()
@@ -46,23 +49,21 @@ export function addCommentListener() {
     })
 }
 
-export function addLikeListener() {
+export function addLikeListener(token) {
     const likeBtns = document.querySelectorAll('.like')
-
     likeBtns.forEach((btn) => {
-        btn.addEventListener('click', () => {
+        btn.onclick = () => {
+            if (!token) {
+                alert('Ставить лайки могут только авторизованные пользователи')
+                return
+            }
             const index = btn.dataset.index
             const comment = comments[index]
-            if (comment.isLiked) {
-                comment.isLiked = false
-                comment.likesCount--
-            } else {
-                comment.isLiked = true
-                comment.likesCount++
-            }
+            comment.isLiked = !comment.isLiked
+            comment.likesCount += comment.isLiked ? 1 : -1
             renderComments()
-            commentListeners()
-        })
+            commentListeners(token)
+        }
     })
 }
 
@@ -81,7 +82,7 @@ export function replyListener() {
     })
 }
 
-export function commentListeners() {
+export function commentListeners(token) {
     replyListener()
-    addLikeListener()
+    addLikeListener(token)
 }
