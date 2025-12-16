@@ -3,8 +3,15 @@ import { loadComments } from './modules/loadComments.js'
 import { token, loginUser } from './modules/auth.js'
 
 loadComments(token)
+const loginLink = document.querySelector('.login')
+const commList = document.querySelector('.comments')
 const loginForm = document.querySelector('.login-form')
 const addForm = document.querySelector('.add-form')
+
+loginLink.addEventListener('click', () => {
+    commList.style.display = 'none'
+    loginForm.style.display = 'block'
+})
 
 document.querySelector('.login-button').addEventListener('click', () => {
     const login = document.querySelector('.login-login').value.trim()
@@ -20,7 +27,9 @@ document.querySelector('.login-button').addEventListener('click', () => {
             alert('Вы успешно вошли!')
             loginForm.style.display = 'none'
             addForm.style.display = 'block'
-            console.log('Токен после логина:', token)
+            commList.style.display = 'block'
+            loginForm.style.display = 'none'
+            loginLink.style.display = 'none'
             addCommentListener(token)
             loadComments(token)
         })

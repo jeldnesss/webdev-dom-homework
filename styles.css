@@ -202,3 +202,10 @@ body {
 .login-button:hover {
     background: #4338ca;
 }
+
+.login {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
