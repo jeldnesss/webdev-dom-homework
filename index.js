@@ -27,7 +27,7 @@ document.querySelector('.login-button').addEventListener('click', () => {
             alert('Вы успешно вошли!')
             loginForm.style.display = 'none'
             addForm.style.display = 'block'
-            commList.style.display = 'block'
+            commList.style.display = 'flex'
             loginForm.style.display = 'none'
             loginLink.style.display = 'none'
             addCommentListener(token)
